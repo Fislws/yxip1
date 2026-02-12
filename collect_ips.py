@@ -13,17 +13,12 @@ prefer_port = True  # ✅ 是否优先显示带端口的 IP（True=带端口排�
 urls = [
     'https://api.uouin.com/cloudflare.html',
     'https://ip.164746.xyz',
-    'https://ipdb.api.030101.xyz/?type=bestcf&country=true',
-    'https://cf.090227.xyz',
-    'https://addressesapi.090227.xyz/CloudFlareYes',
-    'https://addressesapi.090227.xyz/ip.164746.xyz',
-    'https://ipdb.api.030101.xyz/?type=bestcf&country=true',
-    'https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/bestcf.txt'
+    'https://cf.090227.xyz'
 ]
 
 zip_data_url = "https://zip.cm.edu.kg/all.txt"
-zip_target_regions = ["JP", "SG", "KR", "HK"]
-zip_count_per_region = 30
+zip_target_regions = ["SG", "JP", "HK", "US"]
+zip_count_per_region = 20
 
 # ✅ 改进的 IP+端口匹配
 ip_pattern = r'\d{1,3}(?:\.\d{1,3}){3}(?::\d{1,5})?'
@@ -32,15 +27,13 @@ ip_pattern = r'\d{1,3}(?:\.\d{1,3}){3}(?::\d{1,5})?'
 # GitHub 多源配置
 # ============================================
 github_sources = [
-    "https://raw.githubusercontent.com/JiangXi9527/CNJX/refs/heads/main/test-ip.txt",
-    "https://raw.githubusercontent.com/chris202010/yxip/refs/heads/main/city.txt",
+    "https://raw.githubusercontent.com/JiangXi9527/CNJX/refs/heads/main/test-ip.txt"
 ]
 github_targets = {
-    "SG": 30,
+    "SG": 20,
     "JP": 20,
-    "KR": 20,
     "HK": 20,
-    "TW": 20,
+    "Los Angeles": 20
 }
 
 # ============================================
@@ -71,7 +64,7 @@ def safe_get(url, timeout=(5, 30)):
 # ============================================
 # 从 zip.cm.edu.kg 获取地区数据
 # ============================================
-def fetch_zip_region_ips(url, regions, n_each=30):
+def fetch_zip_region_ips(url, regions, n_each=50):
     print(f"正在从 {url} 获取指定地区数据...")
     resp = safe_get(url, timeout=(5, 40))
     if not resp:
@@ -81,8 +74,9 @@ def fetch_zip_region_ips(url, regions, n_each=30):
     lines = resp.text.splitlines()
 
     region_keys = {
+        "SG": ["SG", "Singapore", "新加坡"],
         "JP": ["JP", "Japan", "日本"],
-        "KR": ["KR", "Korea", "韩国"],
+        "HK": ["HK", "Hong Kong", "香港"],
     }
 
     results = {r: [] for r in regions}
@@ -115,11 +109,10 @@ def fetch_github_region_ips(sources, targets):
     print(f"正在从 GitHub 源获取多地区 IP（含端口）...")
     results = {r: [] for r in targets.keys()}
     region_keys = {
-        "JP": ["JP", "Japan", "日本"],
         "SG": ["SG", "Singapore", "新加坡"],
-        "KR": ["KR", "Korea", "韩国"],
+        "JP": ["JP", "Japan", "日本"],
         "HK": ["HK", "Hong Kong", "香港"],
-        "TW": ["TW", "Tai Wang", "台湾","台北","TYP","TP"]
+        "Los Angeles": ["Los Angeles", "洛杉矶"],
     }
 
     for src in sources:
